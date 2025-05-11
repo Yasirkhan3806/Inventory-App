@@ -3,11 +3,18 @@ import { Link } from "react-router-dom";
 import { UpdateMinAmount, UpdateData, DeleteItem } from "./UpdateData";
 import deleteIcon from '../assets/deleteIcon.png'
 
+// Dashboard Component
 export default function Dashboard() {
+  // State to store fetched inventory data
   const [data, setData] = React.useState([]);
+
+  // State to store low stock notifications
   const [notification, setNotification] = React.useState([]);
+
+  // State to store unique categories
   const [categories, setCategories] = React.useState([]);
 
+  // Function to fetch all items from backend
   function fetchData() {
     fetch("http://localhost:5000/getItems")
       .then((response) => response.json())
@@ -15,11 +22,12 @@ export default function Dashboard() {
       .catch((error) => console.error("Error fetching data:", error));
   }
 
+  // Initial fetch when component mounts
   React.useEffect(() => {
     fetchData();
   }, []);
 
-
+  // Check for items with quantity less than or equal to minimum amount
   React.useEffect(() => {
     if (data) {
       const lowStockItems = data.filter(
@@ -27,22 +35,22 @@ export default function Dashboard() {
       );
 
       if (lowStockItems.length > 0) {
-        
+        // Generate notifications for low stock items
         setNotification(
           lowStockItems.map(item => `${item.name} is low on stock!`)
-  
         );
       } else {
         setNotification([]);
       }
     }
-  },[data]);
+  }, [data]);
 
   console.log("Data fetched:", data);
 
+  // Function to update quantity (increment/decrement) with optimistic UI update
   const updateQuantity = async (itemId, changeAmount) => {
     try {
-      // Optimistic update: immediately modify the UI
+      // Optimistically update UI
       setData((prevData) =>
         prevData.map((item) =>
           item._id === itemId
@@ -51,12 +59,12 @@ export default function Dashboard() {
         )
       );
 
-      // Then make the API call
+      // Send update to backend
       await UpdateData(
         changeAmount,
         itemId,
         (error) => {
-          // If error occurs, revert the UI
+          // Revert UI on error
           setData((prevData) =>
             prevData.map((item) =>
               item._id === itemId
@@ -73,9 +81,10 @@ export default function Dashboard() {
     }
   };
 
+  // Function to update minimum required quantity with optimistic UI update
   const updateMinQuantity = async (itemId, changeAmount) => {
     try {
-      // Optimistic update: immediately modify the UI
+      // Optimistically update UI
       setData((prevData) =>
         prevData.map((item) =>
           item._id === itemId
@@ -84,12 +93,12 @@ export default function Dashboard() {
         )
       );
 
-      // Then make the API call
+      // Send update to backend
       await UpdateMinAmount(
         changeAmount,
         itemId,
         (error) => {
-          // If error occurs, revert the UI
+          // Revert UI on error
           setData((prevData) =>
             prevData.map((item) =>
               item._id === itemId
@@ -106,7 +115,7 @@ export default function Dashboard() {
     }
   };
 
-
+  // Search functionality to filter items based on name or category
   const search = (e) => {
     const searchTerm = e.target.value.toLowerCase();
     const items = document.querySelectorAll("#items-container > div");
@@ -120,26 +129,28 @@ export default function Dashboard() {
       }
     });
   }
-React.useEffect(() => {
- const category = [...new Set(data.map(item => item.category))]; 
- setCategories(category);
-  const categorySelect = document.getElementById("categorySelect");
-  categorySelect.addEventListener("change", (e) => {
-    const selectedCategory = e.target.value;
-    const items = document.querySelectorAll("#items-container > div");
-    items.forEach((item) => {
-      const category = item.getAttribute("data-category").toLowerCase();
-      if (selectedCategory === "all" || category === selectedCategory) {
-        item.style.display = "block";
-      } else {
-        item.style.display = "none";
-      }
-    });
-  });
-},[data])
-  
 
- 
+  // Effect to extract unique categories and handle category filtering
+  React.useEffect(() => {
+    const category = [...new Set(data.map(item => item.category))];
+    setCategories(category);
+
+    const categorySelect = document.getElementById("categorySelect");
+
+    // Event listener for category dropdown selection
+    categorySelect.addEventListener("change", (e) => {
+      const selectedCategory = e.target.value;
+      const items = document.querySelectorAll("#items-container > div");
+      items.forEach((item) => {
+        const category = item.getAttribute("data-category").toLowerCase();
+        if (selectedCategory === "all" || category === selectedCategory) {
+          item.style.display = "block";
+        } else {
+          item.style.display = "none";
+        }
+      });
+    });
+  }, [data]);
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -149,7 +160,18 @@ React.useEffect(() => {
           <h1 className="text-3xl font-bold text-gray-800 mb-4 sm:mb-0">
             Inventory Dashboard
           </h1>
-          <input type="text" name="search-items" id="searchBox" className="border-2 border-gray-800 rounded-lg p-1 w-1/4" onChange={(e)=>search(e)} placeholder="Search Items" />
+
+          {/* Search box */}
+          <input
+            type="text"
+            name="search-items"
+            id="searchBox"
+            className="border-2 border-gray-800 rounded-lg p-1 w-1/4"
+            onChange={(e) => search(e)}
+            placeholder="Search Items"
+          />
+
+          {/* Category dropdown filter */}
           <select className="w-1/6 p-1" name="category-selection" id="categorySelect">
             <option value="all">All Categories</option>
             {
@@ -160,6 +182,8 @@ React.useEffect(() => {
               ))
             }
           </select>
+
+          {/* Action buttons */}
           <div className="flex gap-4">
             <Link
               to="/add-data"
@@ -176,8 +200,8 @@ React.useEffect(() => {
           </div>
         </div>
 
+        {/* Notification Section for Low Stock */}
         {
-          /* Notification Section */
           notification && (
             <div className="">
               {notification.map((msg, index) => (
@@ -186,115 +210,119 @@ React.useEffect(() => {
                 </div>
               ))}
             </div>
-          )}  
-      
+          )
+        }
 
         {/* Items Grid */}
-        {data && (
-          <div id="items-container" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {data.map((item) => (
-              <div
-                key={item._id}
-                className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-                data-title={item.name}
-                data-category={item.category}
-              >
-                <div className="p-6">
-                  <div className="flex justify-between items-start mb-4">
-                    <h2 className="text-xl font-semibold text-gray-800">
-                      {item.name}
-                    </h2>
+        {
+          data && (
+            <div id="items-container" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {data.map((item) => (
+                <div
+                  key={item._id}
+                  className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                  data-title={item.name}
+                  data-category={item.category}
+                >
+                  <div className="p-6">
+                    {/* Item title, category, and delete button */}
+                    <div className="flex justify-between items-start mb-4">
+                      <h2 className="text-xl font-semibold text-gray-800">
+                        {item.name}
+                      </h2>
+                      <span className="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
+                        {item.category}
+                      </span>
+                      <button
+                        onClick={() => {
+                          DeleteItem(item._id);
+                          fetchData();
+                        }}
+                      >
+                        <img className="h-6 cursor-pointer" src={deleteIcon} alt="" />
+                      </button>
+                    </div>
 
-                    <span className="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
-                      {item.category}
-                    </span>
+                    {/* Quantity control */}
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600">Current Quantity</span>
+                        <div className="flex gap-2 items-center">
+                          <button
+                            className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              updateQuantity(item._id, -1);
+                            }}
+                          >
+                            -
+                          </button>
+                          <span
+                            className={`text-lg font-medium ${
+                              item.quantity <= item.minimumAmount
+                                ? "text-red-500"
+                                : "text-green-500"
+                            }`}
+                          >
+                            {item.quantity}
+                          </span>
+                          <button
+                            className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              updateQuantity(item._id, 1);
+                            }}
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
 
-                    <button
-                      onClick={() => {
-                        DeleteItem(item._id);
-                        fetchData();
-                      }}
-                    >
-                      <img className="h-6 cursor-pointer" src={deleteIcon} alt="" />
-                    </button>
-                  </div>
-
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Current Quantity</span>
-                      <div className="flex gap-2 items-center">
-                        <button
-                          className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            updateQuantity(item._id, -1);
-                          }}
-                        >
-                          -
-                        </button>
-                        <span
-                          className={`text-lg font-medium ${
-                            item.quantity <= item.minimumAmount
-                              ? "text-red-500"
-                              : "text-green-500"
-                          }`}
-                        >
-                          {item.quantity}
-                        </span>
-                        <button
-                          className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            updateQuantity(item._id, 1);
-                          }}
-                        >
-                          +
-                        </button>
+                      {/* Minimum quantity control */}
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600">Minimum Required</span>
+                        <div className="flex gap-2 items-center">
+                          <button
+                            className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              updateMinQuantity(item._id, -1);
+                            }}
+                          >
+                            -
+                          </button>
+                          <span className="text-lg font-medium text-gray-700">
+                            {item.minimumAmount}
+                          </span>
+                          <button
+                            className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              updateMinQuantity(item._id, 1);
+                            }}
+                          >
+                            +
+                          </button>
+                        </div>
                       </div>
                     </div>
 
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-600">Minimum Required</span>
-                      <div className="flex gap-2 items-center">
-                        <button
-                          className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            updateMinQuantity(item._id, -1);
-                          }}
-                        >
-                          -
-                        </button>
-                        <span className="text-lg font-medium text-gray-700">
-                          {item.minimumAmount}
-                        </span>
-                        <button
-                          className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            updateMinQuantity(item._id, 1);
-                          }}
-                        >
-                          +
-                        </button>
+                    {/* Product image if available */}
+                    {item.productImageLink && (
+                      <div className="mt-4">
+                        <img
+                          src={item.productImageLink}
+                          alt={item.name}
+                          className="w-full h-32 object-cover rounded-lg"
+                        />
                       </div>
-                    </div>
+                    )}
                   </div>
-
-                  {item.productImageLink && (
-                    <div className="mt-4">
-                      <img
-                        src={item.productImageLink}
-                        alt={item.name}
-                        className="w-full h-32 object-cover rounded-lg"
-                      />
-                    </div>
-                  )}
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )
+        }
       </div>
     </div>
   );
