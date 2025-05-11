@@ -1,11 +1,12 @@
-import React from "react";
+import React, { use } from "react";
 import { Link } from "react-router-dom";
 import { UpdateMinAmount, UpdateData, DeleteItem } from "./UpdateData";
 import deleteIcon from '../assets/deleteIcon.png'
 
 export default function Dashboard() {
-  const [data, setData] = React.useState(null);
+  const [data, setData] = React.useState([]);
   const [notification, setNotification] = React.useState([]);
+  const [categories, setCategories] = React.useState([]);
 
   function fetchData() {
     fetch("http://localhost:5000/getItems")
@@ -105,6 +106,41 @@ export default function Dashboard() {
     }
   };
 
+
+  const search = (e) => {
+    const searchTerm = e.target.value.toLowerCase();
+    const items = document.querySelectorAll("#items-container > div");
+    items.forEach((item) => {
+      const title = item.getAttribute("data-title").toLowerCase();
+      const category = item.getAttribute("data-category").toLowerCase();
+      if (title.includes(searchTerm) || category.includes(searchTerm)) {
+        item.style.display = "block";
+      } else {
+        item.style.display = "none";
+      }
+    });
+  }
+React.useEffect(() => {
+ const category = [...new Set(data.map(item => item.category))]; 
+ setCategories(category);
+  const categorySelect = document.getElementById("categorySelect");
+  categorySelect.addEventListener("change", (e) => {
+    const selectedCategory = e.target.value;
+    const items = document.querySelectorAll("#items-container > div");
+    items.forEach((item) => {
+      const category = item.getAttribute("data-category").toLowerCase();
+      if (selectedCategory === "all" || category === selectedCategory) {
+        item.style.display = "block";
+      } else {
+        item.style.display = "none";
+      }
+    });
+  });
+},[data])
+  
+
+ 
+
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-7xl mx-auto">
@@ -113,6 +149,17 @@ export default function Dashboard() {
           <h1 className="text-3xl font-bold text-gray-800 mb-4 sm:mb-0">
             Inventory Dashboard
           </h1>
+          <input type="text" name="search-items" id="searchBox" className="border-2 border-gray-800 rounded-lg p-1 w-1/4" onChange={(e)=>search(e)} placeholder="Search Items" />
+          <select className="w-1/6 p-1" name="category-selection" id="categorySelect">
+            <option value="all">All Categories</option>
+            {
+              categories.map((category, index) => (
+                <option key={index} value={category}>
+                  {category}
+                </option>
+              ))
+            }
+          </select>
           <div className="flex gap-4">
             <Link
               to="/add-data"
@@ -144,11 +191,13 @@ export default function Dashboard() {
 
         {/* Items Grid */}
         {data && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div id="items-container" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {data.map((item) => (
               <div
                 key={item._id}
                 className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                data-title={item.name}
+                data-category={item.category}
               >
                 <div className="p-6">
                   <div className="flex justify-between items-start mb-4">
