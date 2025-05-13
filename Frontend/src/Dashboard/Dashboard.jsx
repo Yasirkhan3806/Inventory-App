@@ -16,7 +16,7 @@ export default function Dashboard() {
 
   // Function to fetch all items from backend
   function fetchData() {
-    fetch("http://localhost:5000/getItems")
+    fetch("http://localhost:5000/Items/getItems")
       .then((response) => response.json())
       .then((data) => setData(data))
       .catch((error) => console.error("Error fetching data:", error));

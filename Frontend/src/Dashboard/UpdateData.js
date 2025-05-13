@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const UpdateData = async (amount, id) => {
   try {
-    const response = await axios.put(`http://localhost:5000/updateQuantity/${id}`, {
+    const response = await axios.put(`http://localhost:5000/Items/updateQuantity/${id}`, {
       "quantity": amount
     });
 
@@ -21,7 +21,7 @@ export const UpdateData = async (amount, id) => {
 
 export const UpdateMinAmount = async (amount, id) => {
   try {
-    const response = await axios.put(`http://localhost:5000/updateMinAmount/${id}`, {
+    const response = await axios.put(`http://localhost:5000/Items/updateMinAmount/${id}`, {
       "minimumAmount": amount
     });
 
@@ -40,7 +40,7 @@ export const UpdateMinAmount = async (amount, id) => {
 
 export const DeleteItem = async (id) => {
   try {
-    const response = await axios.delete(`http://localhost:5000/deleteItem/${id}`);
+    const response = await axios.delete(`http://localhost:5000/Items/deleteItems/${id}`);
     console.log("Delete response:", response.data);
   } catch (error) {
     const serverMessage = error.response?.data?.message || 

@@ -21,7 +21,7 @@ function AddData() {
   setSuccess(null);
 
   try {
-    const response = await axios.post('http://localhost:5000/setItem', data);
+    const response = await axios.post('http://localhost:5000/Items/setItems', data);
     
     // Display server success message
     setSuccess(response.data.message || 'Item added successfully!');
