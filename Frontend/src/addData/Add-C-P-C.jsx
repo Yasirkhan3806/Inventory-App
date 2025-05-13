@@ -14,7 +14,7 @@ export default function AddCPC() {
         setSuccess(null); // Clear previous success
         try {
             const response = await axios.post('http://localhost:5000/Person/setPerson', {
-                name,
+                name:name.trim(),
                 status: type,
             });
             setSuccess(response.data.message);
@@ -57,6 +57,16 @@ export default function AddCPC() {
                             Type:
                         </label>
                         <div className="space-y-2">
+                               <label className="flex items-center">
+                                <input
+                                    type="radio"
+                                    value="admin"
+                                    checked={type === 'admin'}
+                                    onChange={(e) => setType(e.target.value)}
+                                    className="mr-2"
+                                />
+                                Admin
+                            </label>
                             <label className="flex items-center">
                                 <input
                                     type="radio"

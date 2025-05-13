@@ -13,7 +13,7 @@ function AddData() {
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
     const [loading, setLoading] = useState(false);
-    console.log('persons', persons);
+    // console.log('persons', persons);
 
     const handleSubmit = async (e) => {
   e.preventDefault();
@@ -53,7 +53,7 @@ function AddData() {
 
 useEffect(() => {
     const filteredCategories = persons.filter((person) => person.status === 'category');
-    console.log('categories', filteredCategories);
+    // console.log('categories', filteredCategories);
     setCategories(filteredCategories);
 },[persons]);
 

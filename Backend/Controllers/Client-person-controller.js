@@ -2,7 +2,7 @@ import { setPerson,getPerson,deletePerson } from "../Services/Client-Person.js";
 
 export const setPersonController = async (req, res) => {
     try {
-        console.log(req.body);
+        // console.log(req.body);
         await setPerson(req.body);
         res.status(201).json({ message: "Data created successfully" });
     } catch (err) {
@@ -15,6 +15,7 @@ export const setPersonController = async (req, res) => {
 export const getPersonController = async (req, res) => {
     try {
         const person = await getPerson();
+        // console.log("person",person);
         res.status(200).json(person);
     } catch (err) {
         res.status(500).json({ message: err.message });

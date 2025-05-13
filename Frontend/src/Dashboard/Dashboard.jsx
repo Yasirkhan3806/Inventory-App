@@ -2,6 +2,7 @@ import React, { use } from "react";
 import { Link } from "react-router-dom";
 import { UpdateMinAmount, UpdateData, DeleteItem } from "./UpdateData";
 import deleteIcon from "../assets/deleteIcon.png";
+import editIcon from "../assets/editIcon.png";
 
 // Dashboard Component
 export default function Dashboard() {
@@ -45,41 +46,42 @@ export default function Dashboard() {
     }
   }, [data]);
 
-  console.log("Data fetched:", data);
+
+
 
   // Function to update quantity (increment/decrement) with optimistic UI update
-  const updateQuantity = async (itemId, changeAmount) => {
-    try {
-      // Optimistically update UI
-      setData((prevData) =>
-        prevData.map((item) =>
-          item._id === itemId
-            ? { ...item, quantity: item.quantity + changeAmount }
-            : item
-        )
-      );
+  // const updateQuantity = async (itemId, changeAmount) => {
+  //   try {
+  //     // Optimistically update UI
+  //     setData((prevData) =>
+  //       prevData.map((item) =>
+  //         item._id === itemId
+  //           ? { ...item, quantity: item.quantity + changeAmount }
+  //           : item
+  //       )
+  //     );
 
-      // Send update to backend
-      await UpdateData(
-        changeAmount,
-        itemId,
-        (error) => {
-          // Revert UI on error
-          setData((prevData) =>
-            prevData.map((item) =>
-              item._id === itemId
-                ? { ...item, quantity: item.quantity - changeAmount }
-                : item
-            )
-          );
-          alert(`Update failed: ${error}`);
-        },
-        () => console.log("Update successful!")
-      );
-    } catch (error) {
-      console.error("Update error:", error);
-    }
-  };
+  //     // Send update to backend
+  //     await UpdateData(
+  //       changeAmount,
+  //       itemId,
+  //       (error) => {
+  //         // Revert UI on error
+  //         setData((prevData) =>
+  //           prevData.map((item) =>
+  //             item._id === itemId
+  //               ? { ...item, quantity: item.quantity - changeAmount }
+  //               : item
+  //           )
+  //         );
+  //         alert(`Update failed: ${error}`);
+  //       },
+  //       () => console.log("Update successful!")
+  //     );
+  //   } catch (error) {
+  //     console.error("Update error:", error);
+  //   }
+  // };
 
   // Function to update minimum required quantity with optimistic UI update
   const updateMinQuantity = async (itemId, changeAmount) => {
@@ -154,12 +156,16 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
+        <h1 className="text-3xl font-bold text-gray-800 pb-12 sm:mb-0 text-center ">
+            Inventory Dashboard
+          </h1>
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-4 sm:mb-0">
-            Inventory Dashboard
-          </h1>
+          
+        <Link className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors">
+        History
+        </Link>
 
           {/* Search box */}
           <input
@@ -191,6 +197,7 @@ export default function Dashboard() {
               to="/add-cpc"
               className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors"
             >Add</Link>
+            <Link className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors">Delete</Link>
             <Link
               to="/add-data"
               className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors"
@@ -242,6 +249,8 @@ export default function Dashboard() {
                     <span className="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
                       {item.category}
                     </span>
+                    <span className="flex gap-4">
+                    <Link to={`/editItem/${item.name}`} state={{id:item._id}}><img className="h-6 cursor-pointer" src={editIcon} alt="" /></Link>
                     <button
                       onClick={() => {
                         DeleteItem(item._id);
@@ -254,6 +263,7 @@ export default function Dashboard() {
                         alt=""
                       />
                     </button>
+                    </span>
                   </div>
 
                   {/* Quantity control */}
@@ -261,7 +271,7 @@ export default function Dashboard() {
                     <div className="flex justify-between items-center">
                       <span className="text-gray-600">Current Quantity</span>
                       <div className="flex gap-2 items-center">
-                        <button
+                        {/* <button
                           className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
                           onClick={(e) => {
                             e.stopPropagation();
@@ -269,7 +279,7 @@ export default function Dashboard() {
                           }}
                         >
                           -
-                        </button>
+                        </button> */}
                         <span
                           className={`text-lg font-medium ${
                             item.quantity <= item.minimumAmount
@@ -279,7 +289,7 @@ export default function Dashboard() {
                         >
                           {item.quantity}
                         </span>
-                        <button
+                        {/* <button
                           className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
                           onClick={(e) => {
                             e.stopPropagation();
@@ -287,7 +297,7 @@ export default function Dashboard() {
                           }}
                         >
                           +
-                        </button>
+                        </button> */}
                       </div>
                     </div>
 
@@ -318,7 +328,9 @@ export default function Dashboard() {
                         </button>
                       </div>
                     </div>
+                    
                   </div>
+                  
 
                   {/* Product image if available */}
                   {item.productImageLink && (
@@ -330,6 +342,7 @@ export default function Dashboard() {
                       />
                     </div>
                   )}
+                 
                 </div>
               </div>
             ))}

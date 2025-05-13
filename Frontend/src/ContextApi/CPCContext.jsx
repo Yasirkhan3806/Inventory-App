@@ -14,6 +14,7 @@ export const PersonProvider = ({ children }) => {
   const fetchPersons = async () => {
     try {
       const response = await axios.get('http://localhost:5000/Person/getPerson');
+      // console.log('response', response.data);
       setPersons(response.data);
       setLoading(false);
     } catch (err) {
@@ -28,7 +29,7 @@ export const PersonProvider = ({ children }) => {
   useEffect(() => {
     fetchPersons();
   }, []);
-  console.log('persons from api', persons);
+  // console.log('persons from api', persons);
 
   return (
     <PersonContext.Provider value={{ persons, loading, error, fetchPersons }}>
