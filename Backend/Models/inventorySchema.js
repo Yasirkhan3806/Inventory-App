@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const inventorySchema = new mongoose.Schema({
     id: {
@@ -29,4 +29,5 @@ const inventorySchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Inventory", inventorySchema);
+const inventoryModel = mongoose.model("Inventory", inventorySchema);
+export default inventoryModel;

@@ -1,7 +1,7 @@
 import React, { use } from "react";
 import { Link } from "react-router-dom";
 import { UpdateMinAmount, UpdateData, DeleteItem } from "./UpdateData";
-import deleteIcon from '../assets/deleteIcon.png'
+import deleteIcon from "../assets/deleteIcon.png";
 
 // Dashboard Component
 export default function Dashboard() {
@@ -37,7 +37,7 @@ export default function Dashboard() {
       if (lowStockItems.length > 0) {
         // Generate notifications for low stock items
         setNotification(
-          lowStockItems.map(item => `${item.name} is low on stock!`)
+          lowStockItems.map((item) => `${item.name} is low on stock!`)
         );
       } else {
         setNotification([]);
@@ -128,11 +128,11 @@ export default function Dashboard() {
         item.style.display = "none";
       }
     });
-  }
+  };
 
   // Effect to extract unique categories and handle category filtering
   React.useEffect(() => {
-    const category = [...new Set(data.map(item => item.category))];
+    const category = [...new Set(data.map((item) => item.category))];
     setCategories(category);
 
     const categorySelect = document.getElementById("categorySelect");
@@ -172,19 +172,25 @@ export default function Dashboard() {
           />
 
           {/* Category dropdown filter */}
-          <select className="w-1/6 p-1" name="category-selection" id="categorySelect">
+          <select
+            className="w-1/6 p-1"
+            name="category-selection"
+            id="categorySelect"
+          >
             <option value="all">All Categories</option>
-            {
-              categories.map((category, index) => (
-                <option key={index} value={category}>
-                  {category}
-                </option>
-              ))
-            }
+            {categories.map((category, index) => (
+              <option key={index} value={category}>
+                {category}
+              </option>
+            ))}
           </select>
 
           {/* Action buttons */}
           <div className="flex gap-4">
+            <Link
+              to="/add-cpc"
+              className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors"
+            >Add</Link>
             <Link
               to="/add-data"
               className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors"
@@ -201,128 +207,134 @@ export default function Dashboard() {
         </div>
 
         {/* Notification Section for Low Stock */}
-        {
-          notification && (
-            <div className="">
-              {notification.map((msg, index) => (
-                <div key={index} className="bg-yellow-100 text-yellow-800 p-4 rounded-lg mb-6">
-                  {msg}
-                </div>
-              ))}
-            </div>
-          )
-        }
+        {notification && (
+          <div className="">
+            {notification.map((msg, index) => (
+              <div
+                key={index}
+                className="bg-yellow-100 text-yellow-800 p-4 rounded-lg mb-6"
+              >
+                {msg}
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Items Grid */}
-        {
-          data && (
-            <div id="items-container" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {data.map((item) => (
-                <div
-                  key={item._id}
-                  className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-                  data-title={item.name}
-                  data-category={item.category}
-                >
-                  <div className="p-6">
-                    {/* Item title, category, and delete button */}
-                    <div className="flex justify-between items-start mb-4">
-                      <h2 className="text-xl font-semibold text-gray-800">
-                        {item.name}
-                      </h2>
-                      <span className="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
-                        {item.category}
-                      </span>
-                      <button
-                        onClick={() => {
-                          DeleteItem(item._id);
-                          fetchData();
-                        }}
-                      >
-                        <img className="h-6 cursor-pointer" src={deleteIcon} alt="" />
-                      </button>
-                    </div>
-
-                    {/* Quantity control */}
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-600">Current Quantity</span>
-                        <div className="flex gap-2 items-center">
-                          <button
-                            className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              updateQuantity(item._id, -1);
-                            }}
-                          >
-                            -
-                          </button>
-                          <span
-                            className={`text-lg font-medium ${
-                              item.quantity <= item.minimumAmount
-                                ? "text-red-500"
-                                : "text-green-500"
-                            }`}
-                          >
-                            {item.quantity}
-                          </span>
-                          <button
-                            className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              updateQuantity(item._id, 1);
-                            }}
-                          >
-                            +
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Minimum quantity control */}
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-600">Minimum Required</span>
-                        <div className="flex gap-2 items-center">
-                          <button
-                            className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              updateMinQuantity(item._id, -1);
-                            }}
-                          >
-                            -
-                          </button>
-                          <span className="text-lg font-medium text-gray-700">
-                            {item.minimumAmount}
-                          </span>
-                          <button
-                            className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              updateMinQuantity(item._id, 1);
-                            }}
-                          >
-                            +
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Product image if available */}
-                    {item.productImageLink && (
-                      <div className="mt-4">
-                        <img
-                          src={item.productImageLink}
-                          alt={item.name}
-                          className="w-full h-32 object-cover rounded-lg"
-                        />
-                      </div>
-                    )}
+        {data && (
+          <div
+            id="items-container"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            {data.map((item) => (
+              <div
+                key={item._id}
+                className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                data-title={item.name}
+                data-category={item.category}
+              >
+                <div className="p-6">
+                  {/* Item title, category, and delete button */}
+                  <div className="flex justify-between items-start mb-4">
+                    <h2 className="text-xl font-semibold text-gray-800">
+                      {item.name}
+                    </h2>
+                    <span className="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
+                      {item.category}
+                    </span>
+                    <button
+                      onClick={() => {
+                        DeleteItem(item._id);
+                        fetchData();
+                      }}
+                    >
+                      <img
+                        className="h-6 cursor-pointer"
+                        src={deleteIcon}
+                        alt=""
+                      />
+                    </button>
                   </div>
+
+                  {/* Quantity control */}
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600">Current Quantity</span>
+                      <div className="flex gap-2 items-center">
+                        <button
+                          className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            updateQuantity(item._id, -1);
+                          }}
+                        >
+                          -
+                        </button>
+                        <span
+                          className={`text-lg font-medium ${
+                            item.quantity <= item.minimumAmount
+                              ? "text-red-500"
+                              : "text-green-500"
+                          }`}
+                        >
+                          {item.quantity}
+                        </span>
+                        <button
+                          className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            updateQuantity(item._id, 1);
+                          }}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Minimum quantity control */}
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600">Minimum Required</span>
+                      <div className="flex gap-2 items-center">
+                        <button
+                          className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            updateMinQuantity(item._id, -1);
+                          }}
+                        >
+                          -
+                        </button>
+                        <span className="text-lg font-medium text-gray-700">
+                          {item.minimumAmount}
+                        </span>
+                        <button
+                          className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            updateMinQuantity(item._id, 1);
+                          }}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Product image if available */}
+                  {item.productImageLink && (
+                    <div className="mt-4">
+                      <img
+                        src={item.productImageLink}
+                        alt={item.name}
+                        className="w-full h-32 object-cover rounded-lg"
+                      />
+                    </div>
+                  )}
                 </div>
-              ))}
-            </div>
-          )
-        }
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

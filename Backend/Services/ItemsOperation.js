@@ -1,18 +1,15 @@
-import inventorySchema from "../inventorySchema.js";
-import Inventory from "../inventorySchema.js";
+import inventoryModel from "../Models/inventorySchema.js";
 
- export const setItems = async (req) => {
-  // 👈 Add `async`
-  console.log("Request body:", req.body); // Log the request body
+export const setItems = async (req) => {
   try {
     const { name } = req.body;
 
     // Check if item exists (await the query)
-    const existingItem = await inventorySchema.findOne({ name }); // ✅ Corrected
+    const existingItem = await inventoryModel.findOne({ name });
     if (existingItem) throw new Error("Item already exists");
 
     // Create and save new item
-    const newItem = new inventorySchema(req.body);
+    const newItem = new inventoryModel(req.body);
     await newItem.save();
   } catch (err) {
     throw new Error(err.message);
@@ -21,7 +18,7 @@ import Inventory from "../inventorySchema.js";
 
 export const getItems = async () => {
   try {
-    const items = await inventorySchema.find();
+    const items = await inventoryModel.find();
     return items;
   } catch (err) {
     throw new Error(err.message); // Propagates as a rejected Promise
@@ -30,18 +27,18 @@ export const getItems = async () => {
 
 export const deleteItems = async (itemId) => {
   // const itemId = req.params.id;
-  try{
-    await inventorySchema.findByIdAndDelete(itemId);
-  }catch(err){
+  try {
+    await inventoryModel.findByIdAndDelete(itemId);
+  } catch (err) {
     throw new Error(err.message);
   }
 };
 
- export const updateQuantity = (req) => {
+export const updateQuantity = (req) => {
   const itemId = req.params.id;
   const { quantity } = req.body;
 
-  inventorySchema
+  inventoryModel
     .findByIdAndUpdate(itemId, { $inc: { quantity: quantity } }, { new: true })
     .then((updatedItem) => {
       if (!updatedItem) {
@@ -51,12 +48,12 @@ export const deleteItems = async (itemId) => {
     });
 };
 
-export const updateMinimumAmount =  (req) => {
+export const updateMinimumAmount = (req) => {
   const itemId = req.params.id;
   const { minimumAmount } = req.body;
   console.log("Minimum Amount:", minimumAmount); // Log the minimum amount
 
-  inventorySchema
+  inventoryModel
     .findByIdAndUpdate(
       itemId,
       { $inc: { minimumAmount: minimumAmount } },

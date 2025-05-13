@@ -1,15 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { usePersonContext } from '../ContextApi/CPCContext';
 
 function AddData() {
+    const {persons} = usePersonContext();
     const [name, setName] = useState('');
     const [productImageLink, setProductImageLink] = useState(null);
     const [quantity, setQuantity] = useState('');
     const [minimumAmount, setMinimumAmount] = useState('');
     const [category, setCategory] = useState('');
+    const [categories, setCategories] = useState([]);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
     const [loading, setLoading] = useState(false);
+    console.log('persons', persons);
 
     const handleSubmit = async (e) => {
   e.preventDefault();
@@ -46,6 +50,13 @@ function AddData() {
     setLoading(false);
   }
 };
+
+useEffect(() => {
+    const filteredCategories = persons.filter((person) => person.status === 'category');
+    console.log('categories', filteredCategories);
+    setCategories(filteredCategories);
+},[persons]);
+
 
     return (
         <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-md">
@@ -98,13 +109,19 @@ function AddData() {
                 </div>
                 <div className="mb-4">
                     <label className="block text-gray-700 font-bold mb-2">Category:</label>
-                    <input
-                        type="text"
+                    <select
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
                         required
                         className="w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
+                    >
+                        <option value="">Select a category</option>
+                        {categories.map((person) => (
+                            <option key={person.id} className='text-black' value={person.category}>
+                                {person.name}
+                            </option>
+                        ))}
+                    </select>
                 </div>
                 <button
                     type="submit"
