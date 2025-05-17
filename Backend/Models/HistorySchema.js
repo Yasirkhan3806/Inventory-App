@@ -3,7 +3,6 @@ const historySchema = new mongoose.Schema({
     clientId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Person',
-        required: true,
     },
     adminId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -23,6 +22,10 @@ const historySchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    amount :{
+        type:Number,
+        required:true
+    }
 
 });
 
