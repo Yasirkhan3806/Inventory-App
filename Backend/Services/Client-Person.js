@@ -24,6 +24,7 @@ export const getPerson = async () => {
 }
 
 export const deletePerson = async (id) => {
+    console.log(id  )
     try{
         const person = await personModel.findByIdAndUpdate(id,{active:false,archivedAt:new Date()},{new:true});
         if(!person) throw new Error("Person not found");

@@ -161,7 +161,7 @@ export default function Dashboard() {
             >
               Add
             </Link>
-            <Link className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors">
+            <Link to={'/delete-cpc'} className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors">
               Delete
             </Link>
             <Link

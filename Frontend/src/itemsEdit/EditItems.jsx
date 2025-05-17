@@ -18,7 +18,7 @@ export default function EditItems() {
   const [adminId, setAdminId] = useState("");
   const [itemId, setItemId] = useState(id);
   const [client, setClient] = useState([]);
-  const [clientId, setClientId] = useState("");
+  const [clientId, setClientId] = useState('');
   const [companyPerson, setCompanyPerson] = useState([]);
   const [actionType, setActionType] = useState("entry"); // 'entry' or 'issue'
   const [isClient, setIsClient] = useState(false); // Checkbox for client/company person
@@ -31,17 +31,16 @@ export default function EditItems() {
 
   // Populate admin, client, and company person lists on persons change
   useEffect(() => {
-    const adminData = persons.filter((item) => item.status === "admin");
-    const clientData = persons.filter((item) => item.status === "client");
+    const adminData = persons.filter((item) => item.status === "admin" && item.active === true);
+    const clientData = persons.filter((item) => item.status === "client"  && item.active === true);
     const companyPersonData = persons.filter(
-      (item) => item.status === "company person"
+      (item) => item.status === "company person"  && item.active === true
     );
 
     setAdmin(adminData);
     setClient(clientData);
     setCompanyPerson(companyPersonData);
     setAdminId(adminData[0]?._id || "");
-    setClientId(clientData[0]?._id || "");
   }, [persons]);
 
   // Handle form submission

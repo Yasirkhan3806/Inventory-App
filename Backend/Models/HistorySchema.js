@@ -1,8 +1,12 @@
 import mongoose from 'mongoose';
+
+
+
 const historySchema = new mongoose.Schema({
     clientId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Person',
+        default:null
     },
     adminId: {
         type: mongoose.Schema.Types.ObjectId,

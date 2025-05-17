@@ -3,8 +3,9 @@ import HistoryModel from "../Models/HistorySchema.js";
 
 export const addHistory = async (clientId, adminId,itemId, action,amount) => {
     try {
+      const filteredClientID = clientId === ''?null:clientId
         const newHistory = new HistoryModel({
-            clientId,
+            clientId:filteredClientID,
             adminId,
             itemId,
             date: new Date(),
