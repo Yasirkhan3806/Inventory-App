@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { usePersonContext } from '../ContextApi/CPCContext';
+import HomeButton from '../HomeButton';
 
 export default function DeleteCPCMain() {
   const { persons } = usePersonContext();
@@ -45,7 +46,9 @@ export default function DeleteCPCMain() {
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
+       <span className='flex gap-12'> 
       <h2 className="text-2xl font-bold mb-4">Delete Entities</h2>
+    <HomeButton /></span>
 
       {/* Dropdown */}
       <div className="mb-6">
@@ -59,7 +62,7 @@ export default function DeleteCPCMain() {
           <option value="company person">Company Person</option>
           <option value="category">Category</option>
         </select>
-
+         
        
       </div>
 

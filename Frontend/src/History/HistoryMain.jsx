@@ -4,6 +4,7 @@ import AllHistory from './AllHistory';
 import CompanyPersonHistory from './CompanyPersonHistory/CompanyPersonHistory';
 import ClientHistory from './ClientHistory/ClientHistory';
 import ItemHistory from './ItemsHistory/ItemHistory';
+import HomeButton from '../HomeButton';
 
 export default function HistoryMain() {
   const [selected, setSelected] = useState('all');
@@ -44,6 +45,8 @@ export default function HistoryMain() {
         <option value="item">Item</option>
         <option value="all">All</option>
       </select>
+      <span className='ml-12'>  <HomeButton /></span>
+      
       <div className="mt-8">{content}</div>
     </div>
   );

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import axios from 'axios';
+import HomeButton from '../HomeButton';
 
 export default function AddCPC() {
     const [name, setName] = useState('');
@@ -26,9 +27,15 @@ export default function AddCPC() {
     };
 
     return (
+        <>
+       
         <div className="flex justify-center items-center min-h-screen bg-gray-100">
+            
             <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
+                <span className='flex gap-5'>
                 <h2 className="text-2xl font-bold mb-6 text-center">Add Person / Client / Category</h2>
+                 <HomeButton/>
+                 </span>
                 {error && (
                     <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
                         {error}
@@ -108,5 +115,6 @@ export default function AddCPC() {
                 </form>
             </div>
         </div>
+        </>
     );
 }

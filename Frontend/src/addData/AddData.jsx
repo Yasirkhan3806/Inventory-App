@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { usePersonContext } from '../ContextApi/CPCContext';
+import HomeButton from '../HomeButton';
 
 function AddData() {
     const {persons} = usePersonContext();
@@ -59,7 +60,10 @@ useEffect(() => {
 
 
     return (
-        <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-md">
+        <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-md flex flex-col">
+            <span className='self-end'>
+                <HomeButton/>
+            </span>
             {loading && (
                 <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
                     <div className="text-white text-lg">Loading...</div>

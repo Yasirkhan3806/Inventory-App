@@ -5,7 +5,7 @@ import deleteIcon from "../assets/deleteIcon.png";
 import editIcon from "../assets/editIcon.png";
 
 // Dashboard Component
-export default function Dashboard() {
+export default function Dashboard({setLowStockItems}) {
   // State to store fetched inventory data
   const [data, setData] = React.useState([]);
 
@@ -28,23 +28,24 @@ export default function Dashboard() {
     fetchData();
   }, []);
 
-  // Check for items with quantity less than or equal to minimum amount
-  React.useEffect(() => {
-    if (data) {
-      const lowStockItems = data.filter(
-        (item) => item.quantity <= item.minimumAmount
-      );
+  // // Check for items with quantity less than or equal to minimum amount
+  // React.useEffect(() => {
+  //   if (data) {
+  //     const lowStockItems = data.filter(
+  //       (item) => item.quantity <= item.minimumAmount
+  //     );
 
-      if (lowStockItems.length > 0) {
-        // Generate notifications for low stock items
-        setNotification(
-          lowStockItems.map((item) => `${item.name} is low on stock!`)
-        );
-      } else {
-        setNotification([]);
-      }
-    }
-  }, [data]);
+  //     if (lowStockItems.length > 0) {
+  //       setLowStockItems(lowStockItems);
+  //       // Generate notifications for low stock items
+  //       setNotification(
+  //         lowStockItems.map((item) => `${item.name} is low on stock!`)
+  //       );
+  //     } else {
+  //       setNotification([]);
+  //     }
+  //   }
+  // }, [data]);
 
   // Function to update minimum required quantity with optimistic UI update
   const updateMinQuantity = async (itemId, changeAmount) => {
@@ -128,6 +129,10 @@ export default function Dashboard() {
           <Link to="/History" className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors">
             History
           </Link>
+          <Link to="/Low-stock-items" className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors">
+            Low Stock Items
+          </Link>
+
 
           {/* Search box */}
           <input
@@ -179,7 +184,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Notification Section for Low Stock */}
+        {/* Notification Section for Low Stock
         {notification && (
           <div className="">
             {notification.map((msg, index) => (
@@ -191,7 +196,7 @@ export default function Dashboard() {
               </div>
             ))}
           </div>
-        )}
+        )} */}
 
         {/* Items Grid */}
         {data && (
