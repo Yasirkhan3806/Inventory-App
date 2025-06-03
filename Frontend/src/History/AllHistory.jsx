@@ -31,6 +31,7 @@ export default function AllHistory() {
     useEffect(() => {
         fetchHistory();
     }, []);
+    console.log(allHistories);
 
     useEffect(() => {
         setFilteredHistories(filterByMonths(allHistories, filterMonths));

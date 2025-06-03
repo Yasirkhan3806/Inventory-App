@@ -42,7 +42,7 @@ export default function EditItems() {
     setCompanyPerson(companyPersonData);
     setAdminId(adminData[0]?._id || "");
   }, [persons]);
-
+  console.log(companyPerson)
   // Handle form submission
   const onSubmit = (e) => {
     e.preventDefault();
@@ -59,6 +59,7 @@ export default function EditItems() {
         return;
       }
     }
+    console.log(clientId)
     // Prepare form data for submission
     const formData = {
       adminId,
@@ -225,6 +226,7 @@ export default function EditItems() {
                   className="w-full p-2 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
                   onChange={(e) => setClientId(e.target.value)}
                 >
+                <option value="">Select Client</option>
                   {client.map((item) => (
                     <option value={item._id} key={item._id}>
                       {item.name}
@@ -242,6 +244,7 @@ export default function EditItems() {
                   className="w-full p-2 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
                   onChange={(e) => setClientId(e.target.value)}
                 >
+                   <option value="">Select Person</option>
                   {companyPerson.map((item) => (
                     <option value={item._id} key={item._id}>
                       {item.name}
