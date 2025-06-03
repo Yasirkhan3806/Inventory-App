@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
+import {convertToPdfHistory} from '../../CsvAndPdfConversion/MainCAPFunc'
 
 // Component to display the history of a specific inventory item
 export default function SpecificItemHistory() {
@@ -122,6 +123,12 @@ export default function SpecificItemHistory() {
               Total Items Stocked in {filter} Month{filter > 1 ? 's' : ''}: <span className="font-bold">{totalEntryAmount}</span>
             </p>
           </div>
+                   <button 
+  className='bg-blue-500 text-white px-4 py-2 rounded mt-4 hover:bg-blue-600 transition'
+  onClick={() => convertToPdfHistory(historyData,name,issuedCount,totalIssuedAmount,entryCount,totalEntryAmount) }
+>
+  Export PDF
+</button>
         </>
       )}
     </div>

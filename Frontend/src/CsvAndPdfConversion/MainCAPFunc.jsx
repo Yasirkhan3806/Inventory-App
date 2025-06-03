@@ -63,4 +63,50 @@ export const convertToPdf = (data) => {
   doc.save("low_stock_items.pdf");
 };
 
+export const convertToPdfHistory = (data,name,issuedRecords,issuedItems,entryRecords='N/A',entryItems='N/A') => {
+  const doc = new jsPDF();
+
+  // Title
+  doc.setFontSize(18);
+  doc.text(`History For ${name}`, 14, 20);
+
+  // Define columns and rows
+  const headers = [["Date", "ITEM", "ACTION", "AMOUNT", "ADMIN","CLIENT"]];
+  const rows = data.map(item => [
+    item.date,
+    item.itemId?.name || 'N/A',
+    item.action,
+    item.amount,
+    item.adminId?.name || 'N/A',
+    item.clientId?.name || 'N/A'
+
+  ]);
+
+  
+
+  // Generate the table
+  autoTable(doc, {
+    startY: 30,
+    head: headers,
+    body: rows,
+    theme: "striped", // or 'grid' or 'plain'
+    headStyles: { fillColor: [22, 160, 133] }, // Teal header
+  });
+
+   doc.setFont('helvetica', 'bold');
+  doc.setFontSize(18);
+   doc.text(`Summary Report :`, 14, 90);
+
+   doc.setFont('helvetica', 'normal');
+  doc.setFontSize(12);
+  doc.text(`Total Issued Records: ${issuedRecords}`, 16, 100);
+  doc.text(`Total Items Issued: ${issuedItems}`, 16, 108);
+  doc.text(`Total Entry Records: ${entryRecords}`, 16, 116);
+  doc.text(`Total Items Stocked: ${entryItems}`, 16, 124);
+
+
+  // Save the PDF
+  doc.save(`${name} History.pdf`);
+};
+
 

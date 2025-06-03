@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
+import {convertToPdfHistory} from '../../CsvAndPdfConversion/MainCAPFunc'
 
 export default function SpecificClientHistory() {
   const { name } = useParams();
@@ -100,6 +101,12 @@ export default function SpecificClientHistory() {
               Total Amount of Items Issued: <span className="font-bold">{totalIssuedAmount}</span>
             </p>
           </div>
+                   <button 
+            className='bg-blue-500 text-white px-4 py-2 rounded mt-4 hover:bg-blue-600 transition'
+            onClick={() => convertToPdfHistory(historyData,name,issuedCount,totalIssuedAmount)}
+          >
+            Export PDF
+          </button>
         </>
       )}
     </div>
